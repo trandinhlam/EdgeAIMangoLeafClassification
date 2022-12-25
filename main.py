@@ -1,6 +1,7 @@
 # Import các thư viện cần thiết & một số hằng số
 
 from keras.utils.data_utils import get_file
+import tensorflow as tf
 from tensorflow.keras.applications.efficientnet import EfficientNetB2
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, BatchNormalization
 from tensorflow.keras.metrics import CategoricalAccuracy
@@ -28,6 +29,7 @@ test = gen.flow_from_directory(DATASET_FOLDER + '/test/',
                                batch_size=PATCH_SIZE,
                                shuffle=False)
 
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # Xây dựng model dựa trên các backbone thông dụng (VGG,Resnet,Xception,Inception...)
 def getModel():
