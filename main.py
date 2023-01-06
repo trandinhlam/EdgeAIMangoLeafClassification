@@ -29,7 +29,13 @@ test = gen.flow_from_directory(DATASET_FOLDER + '/test/',
                                batch_size=PATCH_SIZE,
                                shuffle=False)
 
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+def printDevices():
+    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+    resolver = tf.distribute.cluster_resolver.TPUClusterResolver(tpu='')
+    tf.config.experimental_connect_to_cluster(resolver)
+    # This is the TPU initialization code that has to be at the beginning.
+    tf.tpu.experimental.initialize_tpu_system(resolver)
+    print("All devices: ", tf.config.list_logical_devices('TPU'))
 
 # Xây dựng model dựa trên các backbone thông dụng (VGG,Resnet,Xception,Inception...)
 def getModel():
@@ -79,10 +85,6 @@ def singleTest():
     model2.load_weights('model.hdf5')
     print(f'test:', model2.evaluate(test))
 
-
-def print_hi(name):
-    singleTest()
-
-
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    printDevices()
+    singleTest()
