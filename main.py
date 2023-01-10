@@ -106,16 +106,20 @@ def convertToLite(modelFile):
     open(f"model_{MODEL_NAME}_{dateStr}.tflite", "wb").write(tfmodel)
 
 
-def singleTest():
-    model2 = getModel()
-    model2.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
-    model2.load_weights(f'model_{MODEL_NAME}.hdf5')
-    model2.summary()
-    print(f'test:', model2.evaluate(test))
-    return model2
+def buildModel():
+    model = getModel()
+    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
+    model.load_weights(f'model_{MODEL_NAME}.hdf5')
+    model.summary()
+    print(f'test:', model.evaluate(test))
+    return model
 
+
+def singleTest():
+    model = buildModel()
+    print(f'test:', model.evaluate(test))
 
 if __name__ == '__main__':
     # printDevices()
-    # convertToLite(singleTest())
+    # convertToLite(buildModel())
     singleTest()
