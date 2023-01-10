@@ -111,7 +111,7 @@ def singleTest():
     model2.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
     model2.load_weights(f'model_{MODEL_NAME}.hdf5')
     model2.summary()
-    # print(f'test:', model2.evaluate(test))
+    print(f'test:', model2.evaluate(test))
     return model2
 
 
