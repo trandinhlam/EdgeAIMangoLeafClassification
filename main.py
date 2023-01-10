@@ -111,7 +111,6 @@ def buildModel():
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
     model.load_weights(f'model_{MODEL_NAME}.hdf5')
     model.summary()
-    print(f'test:', model.evaluate(test))
     return model
 
 
