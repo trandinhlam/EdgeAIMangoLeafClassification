@@ -21,10 +21,10 @@ DATASET_FOLDER = '.'
 LEARNING_RATE = 0.01
 EPOCHS = 50
 MOMENTUM = 0.1
-MODEL_LINK = 'https://drive.google.com/file/d/1-omJp4YaAL4cczyOIiPzPVVtV2Qxs-UF/view?usp=share_link'
 
 IMG_SHAPE = (224, 224, 3)
 # inputs = Input(shape=IMG_SHAPE, batch_size=BATCH_SIZE, dtype=np.uint8)
+# inputs = Input(shape=IMG_SHAPE, batch_size=BATCH_SIZE, dtype=np.float16)
 inputs = Input(shape=IMG_SHAPE, batch_size=BATCH_SIZE)
 base_model = MobileNet(include_top=False, weights='imagenet', input_tensor=inputs)
 
@@ -97,7 +97,7 @@ def build_model():
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
     model.load_weights(f'model_{MODEL_NAME}.hdf5')
     model.summary()
-    return modelg
+    return model
 
 
 def single_test():
