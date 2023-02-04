@@ -46,7 +46,7 @@ def print_devices():
 # Xây dựng model dựa trên các backbone thông dụng (VGG,Resnet,Xception,Inception...)
 def get_model():
     # add a global spatial average pooling layer
-    x = base_model.output
+    x = base_model.predict
     x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
     x = Dense(1024, activation='relu')(x)
@@ -62,7 +62,7 @@ def get_model():
 
 def get_custom_model():
     # add a global spatial average pooling layer
-    x = base_model.output
+    x = base_model.predict
     x = BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001)(x)
     x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
