@@ -1,14 +1,14 @@
 Edge TPU Compiler version 16.0.384591198
-Input: model_ResNet50_20230203-21:48:25.tflite
-Output: model_ResNet50_20230203-21:48:25_edgetpu.tflite
+Input: ./model_lite/model_ResNet50_20230203-21:48:25.tflite
+Output: model_edge_tpu/model_ResNet50_20230203-21:48:25_edgetpu.tflite
 
 Operator                       Count      Status
 
-MAX_POOL_2D                    1          Mapped to Edge TPU
-ADD                            16         Mapped to Edge TPU
-SOFTMAX                        1          Mapped to Edge TPU
 CONV_2D                        53         Mapped to Edge TPU
-MEAN                           1          Mapped to Edge TPU
-QUANTIZE                       2          Mapped to Edge TPU
-FULLY_CONNECTED                2          Mapped to Edge TPU
+SOFTMAX                        1          Mapped to Edge TPU
+ADD                            16         Mapped to Edge TPU
+MAX_POOL_2D                    1          Mapped to Edge TPU
 PAD                            2          Mapped to Edge TPU
+FULLY_CONNECTED                2          Mapped to Edge TPU
+QUANTIZE                       2          Mapped to Edge TPU
+MEAN                           1          Mapped to Edge TPU

@@ -1,5 +1,6 @@
 env
 .idea
+pycoral
 model_*/*.hdf5
 model_*/*.tflite
 *.tflite
