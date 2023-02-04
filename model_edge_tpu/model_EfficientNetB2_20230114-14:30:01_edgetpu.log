@@ -1,0 +1,16 @@
+Edge TPU Compiler version 16.0.384591198
+Input: model_EfficientNetB2_20230114-14:30:01.tflite
+Output: model_EfficientNetB2_20230114-14:30:01_edgetpu.tflite
+
+Operator                       Count      Status
+
+MEAN                           24         Operation is working on an unsupported data type
+CONV_2D                        92         Operation is working on an unsupported data type
+SOFTMAX                        1          Operation is working on an unsupported data type
+ADD                            16         Operation is working on an unsupported data type
+PAD                            5          Operation is working on an unsupported data type
+FULLY_CONNECTED                2          Operation is working on an unsupported data type
+SUB                            1          Operation is working on an unsupported data type
+LOGISTIC                       92         Operation is working on an unsupported data type
+DEPTHWISE_CONV_2D              23         Operation is working on an unsupported data type
+MUL                            95         Operation is working on an unsupported data type

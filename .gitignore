@@ -1,3 +1,5 @@
 env
 .idea
-*.hdf5
+model_*/*.hdf5
+model_*/*.tflite
+*.tflite

@@ -1,14 +1,12 @@
-# Import các thư viện cần thiết & một số hằng số
+from datetime import datetime
 
 import tensorflow as tf
-from tensorflow.keras.applications.efficientnet import EfficientNetB2
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, BatchNormalization, Input
 from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from datetime import datetime
 
 dateStr = datetime.now().strftime("%Y%m%d-%H:%M:%S")
 
@@ -54,10 +52,8 @@ def get_model():
     x = Dense(1024, activation='relu')(x)
     # and a logistic layer
     predictions = Dense(NUM_CLASSES, activation='softmax')(x)
-
     # this is the model we will train
     model = Model(inputs=base_model.input, outputs=predictions)
-
     # first: train only the top layers (which were randomly initialized)
     for layer in base_model.layers:
         layer.trainable = False
@@ -104,13 +100,13 @@ def convert_to_lite(model_file):
     converter.inference_input_type = tf.uint8
     converter.inference_output_type = tf.uint8
     tfmodel = converter.convert()
-    open(f"model_{MODEL_NAME}_{dateStr}.tflite", "wb").write(tfmodel)
+    open(f"model_lite/model_{MODEL_NAME}_{dateStr}.tflite", "wb").write(tfmodel)
 
 
 def build_model():
     model = get_model()
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
-    model.load_weights(f'model_{MODEL_NAME}.hdf5')
+    model.load_weights(f'model_h5/model_{MODEL_NAME}.hdf5')
     model.summary()
     return model
 
