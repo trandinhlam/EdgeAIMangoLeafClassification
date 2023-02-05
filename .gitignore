@@ -1,6 +1,8 @@
 env
 .idea
 pycoral
+valid
+valid/*
 model_*/*.hdf5
 model_*/*.tflite
 *.tflite
