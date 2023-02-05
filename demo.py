@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # load video file
     video = cv2.VideoCapture(video_file)
     fps = video.get(cv2.CAP_PROP_FPS)/rate_ratio
-
+    print(fps)
     interpreter = edge_inference.load_interpreter(model_file)
 
     counter = 0
