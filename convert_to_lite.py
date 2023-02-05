@@ -7,6 +7,7 @@ from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import numpy as np
 
 dateStr = datetime.now().strftime("%Y%m%d-%H:%M:%S")
 
@@ -25,6 +26,11 @@ base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=inputs
 
 # Load dữ liệu
 gen = ImageDataGenerator()
+
+valid = gen.flow_from_directory(DATASET_FOLDER + '/valid/',
+                                target_size=INPUT_SIZE,
+                                batch_size=BATCH_SIZE,
+                                shuffle=True)
 
 test = gen.flow_from_directory(DATASET_FOLDER + '/test/',
                                target_size=INPUT_SIZE,
@@ -45,7 +51,7 @@ def print_devices():
 # Xây dựng model dựa trên các backbone thông dụng (VGG,Resnet,Xception,Inception...)
 def get_model():
     # add a global spatial average pooling layer
-    x = base_model.predict
+    x = base_model.output
     x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
     x = Dense(1024, activation='relu')(x)
@@ -61,7 +67,7 @@ def get_model():
 
 def get_custom_model():
     # add a global spatial average pooling layer
-    x = base_model.predict
+    x = base_model.output
     x = BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001)(x)
     x = GlobalAveragePooling2D()(x)
     # let's add a fully-connected layer
@@ -85,10 +91,22 @@ from tensorflow import lite
 import numpy as np
 
 
+# def representative_dataset():
+#     i = 0
+#     for _ in range(100):
+#         data = np.random.rand(1, 244, 244, 3)
+#         i += 1
+#         print(i)
+#         yield [data.astype(np.float32)]
+
+
 def representative_dataset():
-    for _ in range(100):
-        data = np.random.rand(1, 244, 244, 3)
-        yield [data.astype(np.float32)]
+    i = 0
+    for i in range(len(valid)):
+        x_valid, _ = next(valid)
+        i += 1
+        print(i, x_valid.shape)
+        yield [x_valid]
 
 
 def convert_to_lite(model_file):
@@ -116,6 +134,5 @@ def single_test():
 
 
 if __name__ == '__main__':
-    # printDevices()
-    # convert_to_lite(build_model())
-    single_test()
+    convert_to_lite(build_model())
+    # single_test()
