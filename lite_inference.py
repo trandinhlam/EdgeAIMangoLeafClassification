@@ -32,6 +32,7 @@ def do_inference(interpreter, test_img):
     interpreter.tensor(input_index)()[0][:, :] = image
     interpreter.invoke()
     predict = interpreter.get_tensor(output_index)
+    print(predict)
     predict = np.argmax(predict, axis=1)
     return predict
 

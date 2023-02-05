@@ -5,8 +5,9 @@ import edge_inference
 
 # const
 video_file = './demo/How To Control Caterpillars On Plants Easy (IN HINDI) Caterpillars Eating Leaves.mp4'
+# model_file = './model_lite/model_full_integer_ResNet50_20230205-10:52:35.tflite'
 model_file = './model_edge_tpu/model_full_integer_ResNet50_20230205-10:52:35_edgetpu.tflite'
-rate_ratio = 3
+rate_ratio = 10
 # run
 if __name__ == '__main__':
     # load video file

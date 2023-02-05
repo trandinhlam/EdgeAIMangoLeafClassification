@@ -1,10 +1,7 @@
 from PIL import Image
-
 from pycoral.adapters import common, classify
 from pycoral.utils import edgetpu
 
-import numpy as np
-from sklearn.metrics import accuracy_score
 import utils
 
 
