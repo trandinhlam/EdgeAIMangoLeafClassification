@@ -17,7 +17,6 @@ DATASET_FOLDER = '.'
 LEARNING_RATE = 0.01
 EPOCHS = 50
 MOMENTUM = 0.1
-MODEL_LINK = 'https://drive.google.com/file/d/1-omJp4YaAL4cczyOIiPzPVVtV2Qxs-UF/view?usp=share_link'
 
 IMG_SHAPE = (224, 224, 3)
 inputs = Input(shape=IMG_SHAPE, batch_size=BATCH_SIZE)
@@ -100,7 +99,7 @@ def convert_to_lite(model_file):
     converter.inference_input_type = tf.uint8
     converter.inference_output_type = tf.uint8
     tfmodel = converter.convert()
-    open(f"model_lite/model_{MODEL_NAME}_{dateStr}.tflite", "wb").write(tfmodel)
+    open(f"model_lite/model_full_integer_{MODEL_NAME}_{dateStr}.tflite", "wb").write(tfmodel)
 
 
 def build_model():
@@ -118,5 +117,5 @@ def single_test():
 
 if __name__ == '__main__':
     # printDevices()
-    convert_to_lite(build_model())
-    # single_test()
+    # convert_to_lite(build_model())
+    single_test()
