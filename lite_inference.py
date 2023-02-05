@@ -28,7 +28,6 @@ def get_input_size(interpreter):
 def do_inference(interpreter, test_img):
     size = utils.INPUT_SIZE
     input_index, output_index = utils.get_io_index(interpreter)
-    print(test_img)
     image = Image.fromarray(test_img).resize(size, Image.ANTIALIAS)
     interpreter.tensor(input_index)()[0][:, :] = image
     interpreter.invoke()
