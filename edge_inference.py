@@ -8,14 +8,14 @@ from sklearn.metrics import accuracy_score
 import utils
 
 
-def load_model(model_path):
+def load_interpreter(model_path):
     interpreter = edgetpu.make_interpreter(model_path)
     interpreter.allocate_tensors()
     return interpreter
 
 
 def do_inference(model_path, test_img):
-    interpreter = load_model(model_path)
+    interpreter = load_interpreter(model_path)
     size = common.input_size(interpreter)
     image = Image.open(test_img).convert('RGB').resize(size, Image.ANTIALIAS)
     common.set_input(interpreter, image)
