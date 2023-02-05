@@ -6,8 +6,8 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, BatchNormaliz
 from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import numpy as np
+
+import utils
 
 dateStr = datetime.now().strftime("%Y%m%d-%H:%M:%S")
 
@@ -23,19 +23,6 @@ IMG_SHAPE = (224, 224, 3)
 inputs = Input(shape=IMG_SHAPE, batch_size=BATCH_SIZE)
 MODEL_NAME = 'ResNet50'
 base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=inputs)
-
-# Load dữ liệu
-gen = ImageDataGenerator()
-
-valid = gen.flow_from_directory(DATASET_FOLDER + '/valid/',
-                                target_size=INPUT_SIZE,
-                                batch_size=BATCH_SIZE,
-                                shuffle=True)
-
-test = gen.flow_from_directory(DATASET_FOLDER + '/test/',
-                               target_size=INPUT_SIZE,
-                               batch_size=BATCH_SIZE,
-                               shuffle=False)
 
 
 def print_devices():
@@ -88,7 +75,6 @@ sgd = SGD(learning_rate=LEARNING_RATE, momentum=MOMENTUM)
 acc = CategoricalAccuracy(name='acc')
 
 from tensorflow import lite
-import numpy as np
 
 
 # def representative_dataset():
@@ -102,6 +88,7 @@ import numpy as np
 
 def representative_dataset():
     i = 0
+    valid = utils.get_valid_data_generator()
     for i in range(len(valid)):
         x_valid, _ = next(valid)
         i += 1
@@ -130,6 +117,7 @@ def build_model():
 
 def single_test():
     model = build_model()
+    test = utils.get_test_data_generator()
     print(f'test:', model.evaluate(test))
 
 
