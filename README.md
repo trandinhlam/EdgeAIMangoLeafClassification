@@ -25,6 +25,14 @@ edge_tpu.tflite.
 
 Code file này dùng để chạy inference cho model tflite trên toàn bộ tập test
 
+## edge_inference.py:
+
+Code file này dùng để chạy inference cho model edge tflite trên toàn bộ tập test
+
+## demo.py:
+
+
+
 ## logs:
 
 + 24/12/2022: Chạy bằng CPU của edge device với Model train từ EfficientNetB2: 8s 2s/step. Kích thước model khoảng  9.2M tham số.
