@@ -31,7 +31,7 @@ if __name__ == '__main__':
             print(predict, inference_time)
         # todo: show titles & position & temperature & light info on screen
         # cv2.imshow("Heatmap", image_heat)
-        gap = min(abs(fps / 1000 - inference_time), 0)
+        gap = max(fps / 1000 - inference_time, 0)
         time.sleep(gap)
         if cv2.waitKey(1) == ord('q'):
             break
