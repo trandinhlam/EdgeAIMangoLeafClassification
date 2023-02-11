@@ -32,9 +32,12 @@ def do_inference(interpreter, test_img):
     interpreter.tensor(input_index)()[0][:, :] = image
     interpreter.invoke()
     predict = interpreter.get_tensor(output_index)
-    print(predict)
     predict = np.argmax(predict, axis=1)
-    return predict
+    classes = utils.get_test_data_generator().class_indices
+    class_id = predict[0]
+    label = {i for i in classes if classes[i] == class_id}
+    print(predict, label)
+    return class_id, list(label)[0]
 
 
 if __name__ == '__main__':
