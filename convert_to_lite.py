@@ -2,12 +2,13 @@ from datetime import datetime
 
 import tensorflow as tf
 from tensorflow.keras.applications.resnet50 import ResNet50
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, BatchNormalization, Input
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Input
 from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
-
+import numpy as np
 import utils
+from resnet8 import ResNet8
 
 dateStr = datetime.now().strftime("%Y%m%d-%H:%M:%S")
 
@@ -21,7 +22,7 @@ MOMENTUM = 0.1
 
 IMG_SHAPE = (224, 224, 3)
 inputs = Input(shape=IMG_SHAPE, batch_size=BATCH_SIZE)
-MODEL_NAME = 'ResNet50'
+MODEL_NAME = 'ResNet8'
 base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=inputs)
 
 
@@ -52,42 +53,13 @@ def get_model():
     return model
 
 
-def get_custom_model():
-    # add a global spatial average pooling layer
-    x = base_model.output
-    x = BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001)(x)
-    x = GlobalAveragePooling2D()(x)
-    # let's add a fully-connected layer
-    x = Dense(1024, activation='relu')(x)
-    # and a logistic layer
-    predictions = Dense(NUM_CLASSES, activation='softmax')(x)
-
-    # this is the model we will train
-    model = Model(inputs=base_model.input, outputs=predictions)
-
-    # first: train only the top layers (which were randomly initialized)
-    for layer in base_model.layers:
-        layer.trainable = False
-    return model
-
-
 sgd = SGD(learning_rate=LEARNING_RATE, momentum=MOMENTUM)
 acc = CategoricalAccuracy(name='acc')
 
 from tensorflow import lite
 
 
-# def representative_dataset():
-#     i = 0
-#     for _ in range(100):
-#         data = np.random.rand(1, 244, 244, 3)
-#         i += 1
-#         print(i)
-#         yield [data.astype(np.float32)]
-
-
 def representative_dataset():
-    i = 0
     valid = utils.get_valid_data_generator()
     for i in range(len(valid)):
         x_valid, _ = next(valid)
@@ -99,7 +71,7 @@ def representative_dataset():
 def convert_to_lite(model_file):
     converter = lite.TFLiteConverter.from_keras_model(model_file)
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
-    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8, tf.lite.OpsSet.SELECT_TF_OPS]
     converter.representative_dataset = representative_dataset
     converter.inference_input_type = tf.uint8
     converter.inference_output_type = tf.uint8
@@ -115,12 +87,21 @@ def build_model():
     return model
 
 
-def single_test():
-    model = build_model()
+def single_test(model):
     test = utils.get_test_data_generator()
     print(f'test:', model.evaluate(test))
 
 
 if __name__ == '__main__':
-    convert_to_lite(build_model())
-    # single_test()
+    # convert_to_lite(build_model())
+    # single_test(build_model())
+
+    student = ResNet8(num_classes=NUM_CLASSES)
+    student.build(input_shape=(BATCH_SIZE, 224, 224, 3))
+    sgd = SGD(learning_rate=LEARNING_RATE, momentum=MOMENTUM)
+    acc = CategoricalAccuracy(name='acc')
+    student.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
+    student.load_weights('./model_h5/ResNet8/ResNet8_best_1676130933.1550047_01.tf')
+    student.summary()
+    single_test(student)
+    convert_to_lite(student)
