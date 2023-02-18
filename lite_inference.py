@@ -42,7 +42,7 @@ def do_inference(interpreter, test_img):
 
 if __name__ == '__main__':
     # interpreter = load_model('model_lite/model_full_integer_ResNet50_20230205-10:12:18.tflite')
-    interpreter = load_interpreter('model_lite/model_full_integer_ResNet8_20230212-16:03:56.tflite')
+    interpreter = load_interpreter('model_lite/model_full_integer_ResNet8_20230218-11:26:04.tflite')
     # interpreter = load_model(get_model_path())
     test_gen = utils.get_test_data_generator()
     acc = utils.calculate_acc(interpreter, test_gen)

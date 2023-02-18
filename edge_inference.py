@@ -23,7 +23,7 @@ def do_inference(model_path, test_img):
 
 if __name__ == '__main__':
     # do_inference('./model_edge_tpu/model_ResNet50_20230203-21:48:25_edgetpu.tflite', './test/normal/normal30.jpg')
-    interpreter = load_interpreter('./model_edge_tpu/model_full_integer_ResNet50_20230205-10:52:35_edgetpu.tflite')
+    interpreter = load_interpreter('./model_edge_tpu/model_full_integer_ResNet8_20230218-11:26:04_edgetpu.tflite')
     test_gen = utils.get_test_data_generator()
     acc = utils.calculate_acc(interpreter, test_gen)
     print(acc)

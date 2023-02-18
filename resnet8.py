@@ -1,12 +1,9 @@
-from datetime import datetime
-
 import tensorflow as tf
-from tensorflow.keras.metrics import CategoricalAccuracy
-from tensorflow.keras.models import Model
-from keras.applications.resnet import ResNet
-from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.layers import Activation, Dense, GlobalAveragePooling2D, BatchNormalization, Input, Add, \
-    ZeroPadding2D, Flatten, Conv2D, AveragePooling2D, MaxPooling2D, MaxPool2D
+from keras.models import Model
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, BatchNormalization, Input, Add, \
+    ZeroPadding2D, Flatten, Conv2D, MaxPool2D
+
+NUM_CLASSES = 16
 
 
 class ResnetBlock(Model):
@@ -44,7 +41,6 @@ class ResnetBlock(Model):
 
     def call(self, inputs):
         res = inputs
-
         x = self.conv_1(inputs)
         x = self.bn_1(x)
         x = tf.nn.relu(x)
@@ -81,6 +77,7 @@ class ResNet8(Model):
         self.fc2 = Dense(num_classes, activation="softmax")
 
     def call(self, inputs):
+        print('shape:', inputs.shape)
         out = self.padding(inputs)
         out = self.conv_1(out)
         out = self.init_bn(out)
@@ -93,3 +90,19 @@ class ResNet8(Model):
         out = self.fc1(out)
         out = self.fc2(out)
         return out
+
+
+def resnet8_sequential():
+    model = tf.keras.Sequential()
+    model.add(ZeroPadding2D(padding=((3, 3), (3, 3)), name="conv1_pad"))
+    model.add(Conv2D(64, (7, 7), strides=2, padding="same", kernel_initializer="he_normal"))
+    model.add(BatchNormalization())
+    model.add(MaxPool2D(pool_size=(2, 2), strides=2, padding="same"))
+    model.add(ResnetBlock(64))
+    model.add(ResnetBlock(128, down_sample=True))
+    model.add(ResnetBlock(256, down_sample=True))
+    model.add(GlobalAveragePooling2D())
+    model.add(Flatten())
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dense(NUM_CLASSES, activation="softmax"))
+    return model

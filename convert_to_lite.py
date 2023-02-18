@@ -7,6 +7,8 @@ from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
 import numpy as np
+
+import resnet8
 import utils
 from resnet8 import ResNet8
 
@@ -96,12 +98,15 @@ if __name__ == '__main__':
     # convert_to_lite(build_model())
     # single_test(build_model())
 
-    student = ResNet8(num_classes=NUM_CLASSES)
-    student.build(input_shape=(BATCH_SIZE, 224, 224, 3))
+    student = resnet8.resnet8_sequential()
     sgd = SGD(learning_rate=LEARNING_RATE, momentum=MOMENTUM)
     acc = CategoricalAccuracy(name='acc')
+    student.build(input_shape=(1, 224, 224, 3))
     student.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
-    student.load_weights('./model_h5/ResNet8/ResNet8_best_1676130933.1550047_01.tf')
+    student.load_weights('./model_h5/ResNet8/student_base_best_230218.hdf5')
+    # student.load_weights('./model_h5/ResNet8/ResNet8_best_1676130933.1550047_01.tf')
+    # student.load_weights('./model_h5/Resnet8_230217/check_point')
     student.summary()
     single_test(student)
     convert_to_lite(student)
+
