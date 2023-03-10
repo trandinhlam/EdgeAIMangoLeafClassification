@@ -8,8 +8,10 @@ import lite_inference
 import utils
 
 video_file = './demo/Mango Leaf Cutting Weevil Control (IN HINDI) Mango Leaf Cutting Insects.mp4'
-model_file = './model_lite/model_full_integer_ResNet50_20230205-10:52:35.tflite'
+# model_file = './model_lite/model_full_integer_ResNet50_20230205-10:52:35.tflite'
 # model_file = './model_edge_tpu/model_full_integer_ResNet50_20230205-10:52:35_edgetpu.tflite'
+model_file = './model_lite/model_full_integer_ResNet8_20230218-11:26:04.tflite'
+# model_file = './model_edge_tpu/model_full_integer_ResNet8_20230218-11:26:04_edgetpu.tflite'
 # rate_ratio = 10
 rate_ratio = 2
 # run

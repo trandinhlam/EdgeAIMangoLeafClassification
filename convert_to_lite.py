@@ -103,7 +103,7 @@ if __name__ == '__main__':
     acc = CategoricalAccuracy(name='acc')
     student.build(input_shape=(1, 224, 224, 3))
     student.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=[acc])
-    student.load_weights('./model_h5/ResNet8/student_base_best_230218.hdf5')
+    student.load_weights('./model_h5/ResNet8/student_distiller_best_e15_t1676769343.5795767.hdf5')
     # student.load_weights('./model_h5/ResNet8/ResNet8_best_1676130933.1550047_01.tf')
     # student.load_weights('./model_h5/Resnet8_230217/check_point')
     student.summary()
