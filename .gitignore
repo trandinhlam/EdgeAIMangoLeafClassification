@@ -4,5 +4,5 @@ pycoral
 valid
 demo
 model_*/*.hdf5
-model_*/*.tflite
-*.tflite
+# model_*/*.tflite
+# *.tflite
