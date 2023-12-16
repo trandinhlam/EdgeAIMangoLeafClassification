@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Mango Pest Classification</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        /* Custom styles for the gallery */
+        .gallery-item {
+            margin-bottom: 15px;
+        }
+        img{ padding: 10px;}
+
+    </style>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .loading-icon {
+            position: absolute;
+            font-size: 40px;
+            color: #3498db;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-icon">
+        <i class="fas fa-spinner"></i>
+    </div>
+    
+    <div class="container mt-5">
+        <div class="row" id="gallery">
+    
+            <!-- Gallery items will be dynamically added here -->
+    
+        </div>
+    </div>
+</body>
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(()=>{
+        $.get('http://127.0.0.1:5000/api/data', (resp)=>{
+            const galleryContainer = $("#gallery");
+
+            resp.forEach((image, index) => {
+                const galleryItem = `
+                    <div class="col-md-4 gallery-item">
+                        <div class="row">
+                            <img src="data:image/png;base64, ${image.img}" class="img-fluid rounded" alt="Image ${index + 1}">
+                        </div>
+                        <div class="row" style="margin: 0 auto;">
+                            <h4 class="label" style="color: blue;">${image.label}</span>
+                        </div>
+                    </div>
+                `;
+                galleryContainer.append(galleryItem);
+            });
+            console.log(resp)
+            $('.loading-icon').hide()
+        })
+    })
+</script>
+</html>
