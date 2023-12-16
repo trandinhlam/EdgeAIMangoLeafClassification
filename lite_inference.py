@@ -2,7 +2,7 @@ import argparse
 
 from PIL import Image
 from tensorflow import lite
-
+from IPython.display import display
 import utils
 import numpy as np
 
@@ -39,11 +39,28 @@ def do_inference(interpreter, test_img):
     print(predict, label)
     return class_id, list(label)[0]
 
+def getImageBytes(img):
+    # Convert the image to bytes
+    image_bytes = BytesIO()
+    img.save(image_bytes, format='JPEG')
+    return image_bytes.getvalue()
 
 if __name__ == '__main__':
     # interpreter = load_model('model_lite/model_full_integer_ResNet50_20230205-10:12:18.tflite')
-    interpreter = load_interpreter('model_lite/model_full_integer_ResNet8_20230219-08:20:54.tflite')
+    # interpreter = load_interpreter('model_lite/model_full_integer_ResNet8_20230219-08:20:54.tflite')
+    interpreter = load_interpreter('model_lite/model_full_integer_ResNet18_20230723-10_57_21.tflite')
     # interpreter = load_model(get_model_path())
     test_gen = utils.get_test_data_generator()
-    acc = utils.calculate_acc(interpreter, test_gen)
-    print(acc)
+    # acc = utils.calculate_acc(interpreter, test_gen)
+    # print(acc)
+    img = Image.open('img_inference/IMG_1021.jpeg')
+    img = np.uint8(img)
+    predict, label = do_inference(interpreter, img)
+    if label is not None:
+        img = cv2.putText(img=img,
+                                text=f'label: {label}',
+                                org=(0, 75), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
+                                fontScale=0.75,
+                                color=(255, 0, 0), thickness=2)
+    img = Image.fromarray(img)
+    Image.save(img)

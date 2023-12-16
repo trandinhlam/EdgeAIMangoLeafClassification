@@ -14,12 +14,9 @@ https://drive.google.com/file/d/1-omJp4YaAL4cczyOIiPzPVVtV2Qxs-UF/view?usp=share
 
 ## convert_to_lite.py:
 
-Code này để tải nạp một model cụ thể kèm theo trọng số đã được train của nó. Sau đó convert bằng Tensorflow Lite có qua
-bước quantization để cho ra model .tflite (uint8)
-để model được gọn nhẹ hơn.
+Code này để tải nạp một model cụ thể kèm theo trọng số đã được train của nó. Sau đó convert bằng Tensorflow Lite có qua bước quantization để cho ra model .tflite (uint8) để model được gọn nhẹ hơn.
 
-Tiếp đến, để chạy được model lite trên thiết bị edge TPU thì ta cần dùng edgetpu_compiler để convert sang _
-edge_tpu.tflite.
+Tiếp đến, để chạy được model lite trên thiết bị edge TPU thì ta cần dùng edgetpu_compiler để convert sang edge_tpu.tflite.
 
 ## lite_inference.py:
 
@@ -35,7 +32,7 @@ Code file này dùng để chạy inference cho model edge tflite trên toàn b�
 
 ## logs:
 
-+ 24/12/2022: Chạy bằng CPU của edge device với Model train từ EfficientNetB2: 8s 2s/step. Kích thước model khoảng  9.2M tham số.
++ 24/12/2022: Chạy bằng CPU của edge device với Model train từ EfficientNetB2: 8s 2s/step. Kích thước model khoảng 9.2M tham số.
 
 + 03/02/2023: Chạy model Resnet50 sau khi convert về EdgeTPU với tốc độ khoảng 20FPS cho một model 25M tham số. 
 
