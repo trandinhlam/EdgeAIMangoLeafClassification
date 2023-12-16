@@ -1,6 +1,7 @@
 import argparse
 
-from PIL import Image
+from PIL import Image,ImageDraw, ImageFont
+
 from tensorflow import lite
 import utils
 import numpy as np
@@ -27,7 +28,7 @@ def get_input_size(interpreter):
 def do_inference(interpreter, test_img):
     size = utils.INPUT_SIZE
     input_index, output_index = utils.get_io_index(interpreter)
-    image = Image.fromarray(test_img).resize(size, Image.ANTIALIAS)
+    image = Image.fromarray(test_img).resize(size, Image.BILINEAR)
     interpreter.tensor(input_index)()[0][:, :] = image
     interpreter.invoke()
     predict = interpreter.get_tensor(output_index)
@@ -59,14 +60,19 @@ if __name__ == '__main__':
     for image_file in image_files:
         image_path = os.path.join(folder_path, image_file)
         img = Image.open(image_path)
-        img = np.uint8(img)
-        predict, label = do_inference(interpreter, img)
+        # img = np.uint8(img)
+        predict, label = do_inference(interpreter, np.uint8(img))
         print(predict, label, image_file)
         if label is not None:
-            img = cv2.putText(img=img,
-                                    text=f'label: {label}',
-                                    org=(0, 75), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
-                                    fontScale=0.75,
-                                    color=(255, 0, 0), thickness=2)
-        img = Image.fromarray(img)
-        img.save(os.path.join('img_inference_result', image_file))
+            
+            # img = cv2.putText(img=img,
+            #                         text=f'label: {label}',
+            #                         org=(0, 75), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
+            #                         fontScale=0.75,
+            #                         color=(255, 0, 0), thickness=2)
+        # img = Image.fromarray(img)
+            draw = ImageDraw.Draw(img)
+            font_path = ImageFont.load_default().font_variant(size=20)
+            # font = ImageFont.truetype("arial.ttf", 20)  # You can adjust the font and size
+            draw.text((0, 75), f"label: {label}", font=font_path, fill=(255, 0, 0))
+            img.save(os.path.join('img_inference_result', image_file))
