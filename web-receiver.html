@@ -1,79 +1,192 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Mango Pest Classification</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-        /* Custom styles for the gallery */
-        .gallery-item {
-            margin-bottom: 15px;
-        }
-        img{ padding: 10px;}
-
+      /* Custom styles for the gallery */
+      .gallery-item {
+        margin-bottom: 15px;
+      }
+      img {
+        padding: 10px;
+      }
     </style>
     <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
 
-        .loading-icon {
-            position: absolute;
-            font-size: 40px;
-            color: #3498db;
-            animation: spin 1s infinite linear;
-        }
+      .loading-icon {
+        position: absolute;
+        font-size: 40px;
+        color: #3498db;
+        animation: spin 1s infinite linear;
+      }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .features {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .features .btn {
+        height: 80px;
+        font-size: 30px;
+      }
+
+      #resultContainer {
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    #imagePreview img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    #resultLabel {
+        font-size: 30px;
+        color:blue;
+        
+    }
     </style>
-</head>
-<body>
-    <div class="loading-icon">
-        <i class="fas fa-spinner"></i>
+  </head>
+  <body>
+    <div class="row features">
+      <button class="col-md-3 btn btn-success" id="f-upload">
+        <i class="bi bi-upload"></i>
+        Upload
+      </button>
+      <div class="col-md-2"></div>
+      <button class="col-md-3 btn btn-primary" id="f-get-all">Get All</button>
     </div>
-    
-    <div class="container mt-5">
-        <div class="row" id="gallery">
-    
-            <!-- Gallery items will be dynamically added here -->
-    
+    <div class="feature" id="feature-upload" style="display: none">
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input
+          type="file"
+          name="file"
+          id="fileInput"
+          accept="image/*"
+          required
+        />
+        <button type="button" class="btn btn-success" id="submit">
+          Upload Image
+        </button>
+      </form>
+
+      <div id="resultContainer" style="display: none">
+        <div id="imagePreview"></div>
+        <div id="resultLabel">
+          <strong>Label:</strong> <span id="labelText"></span>
         </div>
+      </div>
     </div>
-</body>
-<!-- Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="feature" id="feature-get-all" style="display: none">
+      <div class="loading-icon">
+        <i class="fas fa-spinner"></i>
+      </div>
+      <div class="container mt-5">
+        <div class="row" id="gallery"></div>
+      </div>
+    </div>
+  </body>
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-    $(document).ready(()=>{
-        $.get('http://127.0.0.1:5000/api/data', (resp)=>{
-            const galleryContainer = $("#gallery");
+  <script>
+    $(document).ready(() => {
+      function submitForm() {
+        // Get the form and file input
+        var form = $("#uploadForm")[0];
+        var formData = new FormData(form);
 
-            resp.forEach((image, index) => {
-                const galleryItem = `
-                    <div class="col-md-4 gallery-item">
-                        <div class="row">
-                            <img src="data:image/png;base64, ${image.img}" class="img-fluid rounded" alt="Image ${index + 1}">
-                        </div>
-                        <div class="row" style="margin: 0 auto;">
-                            <h4 class="label" style="color: blue;">${image.label}</span>
-                        </div>
-                    </div>
-                `;
-                galleryContainer.append(galleryItem);
-            });
-            console.log(resp)
-            $('.loading-icon').hide()
-        })
-    })
-</script>
+        // Perform the asynchronous POST request
+        $.ajax({
+          url: "http://127.0.0.1:5000/api/upload",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            // Display the result label
+             // Display the image preview
+             // Display the image preview as base64
+            var imagePreview = $('#imagePreview');
+            imagePreview.empty();
+            var img = $('<img>').attr('src', 'data:image/jpeg;base64,' + data.img).attr('width', '320px');
+            imagePreview.append(img);
+            $("#labelText").text(data.label);
+            $("#resultContainer").show();
+          },
+          error: function (error) {
+            console.error("Error:", error);
+          },
+        });
+      }
+
+      $("#f-get-all").click(() => {
+        $(".feature, .features").hide();
+        $("#feature-get-all").show();
+        $.get("http://127.0.0.1:5000/api/data", (resp) => {
+          const galleryContainer = $("#gallery");
+
+          resp.forEach((image, index) => {
+            const galleryItem = `
+                            <div class="col-md-4 gallery-item">
+                                <div class="row">
+                                    <img src="data:image/png;base64, ${
+                                      image.img
+                                    }" class="img-fluid rounded" alt="Image ${
+              index + 1
+            }">
+                                </div>
+                                <div class="row" style="margin: 0 auto;">
+                                    <h4 class="label" style="color: blue;">${
+                                      image.label
+                                    }</span>
+                                </div>
+                            </div>
+                        `;
+            galleryContainer.append(galleryItem);
+          });
+          console.log(resp);
+          $(".loading-icon").hide();
+        });
+      });
+
+      $("#f-upload").click(() => {
+        $(".feature, .features").hide();
+        $("#feature-upload").show();
+        $("#submit").click(submitForm);
+      });
+    });
+  </script>
 </html>

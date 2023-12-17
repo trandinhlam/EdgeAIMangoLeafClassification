@@ -72,6 +72,21 @@ def load_data():
         resp.append({"label": label, "img": img_base64})
     return jsonify(resp)
 
+@app.route('/api/upload', methods=['POST'])
+def upload_data():
+    #todo: receiver a image from request, and return the label
+    file = request.files['file']
+    print(file)
+    if file and file.filename.endswith(('.jpg', '.jpeg', '.png')):
+        img = Image.open(file)
+        predict, label = do_inference(interpreter, np.uint8(img))
+        buffered = BytesIO()
+        img = img.resize((500, 500))
+        img.save(buffered, format="PNG")  # Change the format as needed
+        img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8") 
+        return jsonify({"label": label,"img":img_base64})
+    return jsonify({"error": "Invalid file type"})
+
 
 
 if __name__ == '__main__':
@@ -84,23 +99,4 @@ if __name__ == '__main__':
     # print(acc)
     # Filter the list to include only files with certain extensions (e.g., '.jpeg' or '.jpg')
 
-    # Iterate through each image file and open it
-    for image_file in image_files:
-        image_path = os.path.join(folder_path, image_file)
-        img = Image.open(image_path)
-        # img = np.uint8(img)
-        predict, label = do_inference(interpreter, np.uint8(img))
-        print(predict, label, image_file)
-        if label is not None:
-            
-            # img = cv2.putText(img=img,
-            #                         text=f'label: {label}',
-            #                         org=(0, 75), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
-            #                         fontScale=0.75,
-            #                         color=(255, 0, 0), thickness=2)
-        # img = Image.fromarray(img)
-            draw = ImageDraw.Draw(img)
-            font_path = ImageFont.load_default().font_variant(size=20)
-            # font = ImageFont.truetype("arial.ttf", 20)  # You can adjust the font and size
-            draw.text((0, 75), f"label: {label}", font=font_path, fill=(255, 0, 0))
-            img.save(os.path.join('img_inference_result', image_file))
+    # Iterate through each image file and open
