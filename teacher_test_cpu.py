@@ -82,6 +82,7 @@ def test_model(model):
 
 
 from urllib.request import urlretrieve
+import os
 
 def download_weights(url, destination):
     urlretrieve(url, destination)
@@ -108,3 +109,4 @@ for i in range(len(models)):
     print(f"load model {destination_path}")
     teacher = load_model(model, destination_path)
     test_model(teacher)
+    os.remove(destination_path)
